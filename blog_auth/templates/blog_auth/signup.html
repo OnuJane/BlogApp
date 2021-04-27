@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Sign Up </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="https://www.google.com">Home</a></li>
+                <li><a href="../login">login</a></li>
+                <li><a href="./">Signup</a></li>
+                <li><a href="../post">Posts</a></li>
+            </ul>
+        </nav>
+
+        <form id="register_form" method="POST">
+            {% csrf_token %}
+            <label for="name">Full Name</label>
+            <input id="name" type="text" value="" placeholder="Enter Your Full name">
+            <br><br>
+            <label for="email">Email</label>
+            <input id="email" type="email" value="" placeholder="Enter Your E-mail Address">
+            <br><br>
+            <label for="password">Password</label>
+            <input id="password" type="password" value="" placeholder="Enter Your Password">
+            <br><br>
+            <label for="confirm_password">Confirm Password</label>
+            <input id="confirm_password" type="password" value="" placeholder="Confirm Password">
+            <br><br>
+            <button id="submit" type="submit">Register</button>
+            <br><br>
+            <div class="error_message"></div>
+
+        </form>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        
+        <script>
+        $(document).ready(function(){
+         $("#register_form").submit(function(event){
+          event.preventDefault();
+          var name = $("#name").val();
+          var email = $("#email").val();
+          var password = $("#password").val();
+          var password_len = $("#password").val().length;
+          var password2 = $("#confirm_password").val();
+          var submit =  $("#submit").val();
+          function checkStringForNumbers(input){
+    
+    
+       //var validate = function(input){
+                 let str = String(input);
+                for( let i = 0; i < str.length; i++){
+                      //   console.log(str.charAt(i));
+                   if(!isNaN(str.charAt(i))){           //if the string is a number, do the following
+                         return true;
+                         break;
+                   }
+                }
+            // }
+       }
+    
+    
+        if(name==''){
+            $("#name").css({"background-color": "transparent", "border-color": "red"});
+            $(".error_message").html("<p style='' class='error-alert'>Name field is empty</p>");
+        }else{
+          $("#name").css({"border-color": "green"});
+              if(email==''){
+                $("#email").css({"background-color": "transparent", "border-color": "red"});
+                $(".error_message").html("<p style='' class='error-alert'>Email field is empty</p>");
+        }else{
+                $("#email").css({"border-color": "green"});
+                    if(password==''){
+                       $(".error_message").html("<p style='' class='error-alert'>Password field is empty</p>");
+                      $("#psw1").css({"background-color": "transparent", "border-color": "red"});
+        }else{
+                    $("#psw1").css({"border-color": "green"});
+    
+                    if(password_len < 8){
+                       $(".error_message").html("<p style='' class='error-alert'>Password must be at least 8 characters</p>");
+                      $("#psw1").css({"background-color": "transparent", "border-color": "red"});
+        }else{
+                    $("#psw1").css({"border-color": "green"});
+    
+                      if(checkStringForNumbers(password) != true){
+                       $(".error_message").html("<p style='' class='error-alert'>Password must contain a number</p>");
+                      $("#psw1").css({"background-color": "transparent", "border-color": "red"});
+        }else{
+                    $("#psw1").css({"border-color": "green"});
+                    if(password2==''){
+                       $(".error_message").html("<p style='' class='error-alert'>Confirm your password</p>");
+                      $("#psw2").css({"background-color": "transparent", "border-color": "red"});
+        }else{
+                    $("psw2").css({"border-color": "green"});
+                    if(password != password2){
+                      $("#psw1").css({"background-color": "transparent", "border-color": "red"});
+                      $("#psw2").css({"background-color": "transparent", "border-color": "red"});
+                      $(".error_message").html("<p class='error-alert' style='text-align:center'>Passwords do not match<p>");
+        }else{
+          $("#psw1").css({"border-color": "green"});
+          $("psw2").css({"border-color": "green"});
+                   
+           $(".error_message").html("<p style='' class='success-alert'>Please wait...</p>");
+           console.log(window.location.protocol + "//" + window.location.host +"/signup/")
+    $.ajax({
+    
+        type: "POST",
+        url: window.location.protocol + "//" + window.location.host +"/signup/",
+    //    contentType: "application/json",
+    //    dataType: "json",
+        data: {       csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                      name : name,
+                      email : email,
+                      password : password,
+                      submit : submit
+        },
+        success: function(response) {
+    $(".error_message").html(response);
+    
+            
+        },
+        error: function(response) {
+     $(".error_message").html("<p class='error-alert' style='text-align:center'>An error occured<p>");
+         }       
+    
+                
+                });
+    
+    
+     
+                  }
+                }
+              }
+        }
+        }
+          }
+        }
+    
+    
+    
+    
+         });   
+        });
+    </script>
+        
+    </body>
+</html>
